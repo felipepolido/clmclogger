@@ -299,13 +299,6 @@ specs=fscanf(fid,'%d %d %d %f',4);  % [dummy,cols,rows,freq]
 MRDS.cols = specs(2);
 MRDS.rows = specs(3);
 MRDS.freq = specs(4);
-
-% header_i = fread(fid, 3, 'int32');
-% header_f = fread(fid, 1, 'float32');
-% MRDS.cols = header_i(2);
-% MRDS.rows = header_i(3);
-% MRDS.freq = header_f;
-
 MRDS.t    = (1:MRDS.rows)'/MRDS.freq;  % the time column
 MRDS.vars = [];
 MRDS.fname= fname;
