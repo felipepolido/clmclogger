@@ -17,7 +17,7 @@ set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES mrdplot
+  LIBRARIES mrdplot logger
   CATKIN_DEPENDS roscpp roslib
   DEPENDS Eigen3 
 )
@@ -35,6 +35,6 @@ include_directories(
 ## Declare a cpp library
 add_library(logger src/Logger.cpp)
 target_link_libraries(logger ${catkin_LIBRARIES}
-                              )
+                             mrdplot )
 set_target_properties(logger PROPERTIES COMPILE_FLAGS "-std=c++0x -o3")     
                           
