@@ -20,9 +20,6 @@
 #include <string> 
 #include <mrdplot/Logger.h>
 
-// #include <cmu_walk/Utils.hpp>
-// #include <cmu_walk/Eigen_utils.hpp>
-
 // If running on the dev boards and you want to lock memory change
 // this to 50000.  500000 results in more than 8gigs - the memory size
 // on the dev boards
