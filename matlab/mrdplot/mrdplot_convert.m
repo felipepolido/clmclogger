@@ -1,4 +1,4 @@
-function [D,names,units,freq] = mrdplot_convert(fname)
+function [D,name,unit,freq] = mrdplot_convert(fname)
 % [D,names,units,freq] = mrdplot_convert(fname)
 % converts an MRDPLOT binary file into a Matlab matrix. If fname is
 % given, the file is processed immediately. If no filename is given,
@@ -26,15 +26,13 @@ specs=fscanf(fid,'%d %d %d %f',4);  % [dummy,cols,rows,freq]
 cols = specs(2);
 rows = specs(3);
 freq = specs(4);
-names=zeros(cols,40);
-units=zeros(cols,40);
+t    = (1:rows)'/freq;  % the time column
+fname= fname;
 % read all variable names
 
 for i=1:cols,
-	temp=fscanf(fid,'%s',1);
-	names(i,:)=[temp zeros(1,40-length(temp))];
-	temp=fscanf(fid,'%s',1);
-	units(i,:)=[temp zeros(1,40-length(temp))];
+	name{i}=fscanf(fid,'%s',1);
+	unit{i}=fscanf(fid,'%s',1);
 end;
 fscanf(fid,'%c',3); % there are three characters which must be skipped
 
