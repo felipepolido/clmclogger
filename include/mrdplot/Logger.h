@@ -119,16 +119,6 @@ class Logger {
 
 			return true;
 		}
-
-    
-    ///////////////////////////////////////////
-    // eric debugging tool
-    static double tmpOut[20];
-    static int errCode;
-    static void setErrEW(int err);
-    static void setTmpOut(int ind, double val);
-    void addEWstatic();
-    ///////////////////////////////////////////
     
     virtual void init(double timestep)=0;
     virtual void saveData()=0;

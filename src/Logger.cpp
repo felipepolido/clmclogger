@@ -3,7 +3,7 @@
  *
  *       Filename:  Logger.cpp
  *
- *    Description:  
+ *    Description:  C++ Wrapper for MRDPLOT utility
  *
  *        Version:  1.0
  *        Created:  03/13/2013 05:07:33 PM
@@ -20,36 +20,10 @@
 #include <string> 
 #include <mrdplot/Logger.h>
 
-// #include <cmu_walk/Utils.hpp>
-// #include <cmu_walk/Eigen_utils.hpp>
-
 // If running on the dev boards and you want to lock memory change
 // this to 50000.  500000 results in more than 8gigs - the memory size
 // on the dev boards
 #define LOGGER_MAX_N_POINTS 500000
-
-///////////////////////////////////////////
-// eric debugging tool
-double Logger::tmpOut[20] = {0.0};
-int Logger::errCode = 0;
-
-void Logger::setErrEW(int err) {
-  errCode = err;
-}
-
-void Logger::setTmpOut(int ind, double val) {
-  tmpOut[ind] = val;
-}
-
-void Logger::addEWstatic() {
-  add_datapoint("errCode","-",&errCode);
-  for(int i = 0; i < 20; i++) {
-    char name[100];
-    sprintf(name,"tmpOut[%d]",i);
-    add_datapoint(name,"-",&(tmpOut[i]));
-  }
-}
-///////////////////////////////////////////
 
 Logger::Logger() {
   _data = NULL;
