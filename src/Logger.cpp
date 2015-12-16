@@ -103,7 +103,7 @@ void BatchLogger::saveData()
   
   if (!_inited) {
     if(!noInitSent) {
-    	fprintf(stdout, "logger not inited.\n");
+    	fprintf(stdout, "logger not initialized.\n");
     	noInitSent = true;
     }
     return;
