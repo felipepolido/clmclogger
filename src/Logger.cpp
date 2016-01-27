@@ -89,8 +89,10 @@ void BatchLogger::init(double timestep)
 
 bool noInitSent = false;
 
+
 void BatchLogger::saveData()
 {
+  boost::lock_guard<boost::mutex> lock(mtx);
   static bool err = false;
 
   if(_recorded)	return;		//stop wasting your time
@@ -141,6 +143,7 @@ void BatchLogger::saveData()
 
 void BatchLogger::writeToMRDPLOT(const char *prefix)
 {
+  mtx.lock();
   if (!_inited || _nPoints == 0)
     return;
   _recorded = true;
@@ -153,13 +156,14 @@ void BatchLogger::writeToMRDPLOT(const char *prefix)
   d->total_n_numbers = d->n_channels*d->n_points;
   d->frequency = _frequency;
   d->data = _data;
-  
+  mtx.unlock();
+
   fprintf(stdout, "%s SAVING DATA ..... \n", d->filename);
 
-  d->names = new char*[_nChannels];
-  d->units = new char*[_nChannels];
+  d->names = new char*[d->n_channels];
+  d->units = new char*[d->n_channels];
 
-  for (int i = 0; i < _nChannels; i++) {
+  for (int i = 0; i < d->n_channels; i++) {
     d->names[i] = new char[LOGGER_MAX_CHARS];
     d->units[i] = new char[LOGGER_MAX_CHARS];
 
@@ -169,7 +173,7 @@ void BatchLogger::writeToMRDPLOT(const char *prefix)
 
   write_mrdplot_file( d );
 
-  for (int i = 0; i < _nChannels; i++) {
+  for (int i = 0; i < d->n_channels; i++) {
     delete []d->names[i];
     delete []d->units[i];
   }

@@ -24,6 +24,9 @@
 #include <mrdplot/mrdplot.h>
 #include <eigen3/Eigen/Geometry>
 #include <typeinfo>
+#include <boost/thread.hpp>
+#include <boost/thread/mutex.hpp>
+
 
 #define LOGGER_MAX_CHANNELS 2000 
 #define LOGGER_MAX_CHARS		100
@@ -133,6 +136,8 @@ class BatchLogger : public Logger {
     void init(double timestep);
     void saveData();
     void writeToMRDPLOT(const char *prefix);  
+	boost::mutex mtx;
+
 };
 
 
