@@ -79,7 +79,8 @@ class Logger {
     Eigen::Quaterniond const *_qPtr[LOGGER_MAX_QUAT];
     double _EAbuff[3*LOGGER_MAX_QUAT];
     int _nQuat;
-    bool _recorded;
+    bool _saving;
+    bool _noInitSent;
     
     void init_(double timestep);
   public:
@@ -136,7 +137,7 @@ class BatchLogger : public Logger {
     void init(double timestep);
     void saveData();
     void writeToMRDPLOT(const char *prefix);  
-	boost::mutex mtx;
+	//boost::mutex mtx;
 
 };
 

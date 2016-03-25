@@ -25,20 +25,23 @@
 // on the dev boards
 #define LOGGER_MAX_N_POINTS 500000
 
-Logger::Logger() {
-  _data = NULL;
-  _nPoints = 0;
-  _myIdx = 0;
-  _frequency = 0;
-  _nChannels = 0;
-  _inited = false;
+Logger::Logger():
+  _data(NULL), 
+  _nPoints(0),
+  _myIdx(0),
+  _frequency(0),
+  _nChannels(0),
+  _inited(false),
+  _nQuat(0),
+  _saving(false),
+  _noInitSent(false)
+{
 
-  _nQuat = 0;
-  _recorded = false;
 }
 
 Logger::~Logger()
 {
+  _inited = false;
   if (_data)
     delete []_data;
   _data = NULL;
@@ -47,11 +50,11 @@ Logger::~Logger()
 void Logger::init_(double timestep)
 {
   _ctr = 0;
-  _inited = true;
   _myIdx = 0;
   _nPoints = 0;
   _nChannels = 0;
   _data = new float[LOGGER_MAX_N_POINTS*LOGGER_MAX_CHANNELS];
+  _inited = true; //has to be after memory is allocated
 
   //_frequency = 333;
   _frequency = 1./timestep;
@@ -87,15 +90,13 @@ void BatchLogger::init(double timestep)
   init_(timestep);
 }
 
-bool noInitSent = false;
-
 
 void BatchLogger::saveData()
 {
-  boost::lock_guard<boost::mutex> lock(mtx);
+  //boost::lock_guard<boost::mutex> lock(mtx);
   static bool err = false;
 
-  if(_recorded)	return;		//stop wasting your time
+  if(_saving)	return;		//stop wasting your time
 
   // for(int i = 0; i < _nQuat; i++) {
   //   quat2EA(*(_qPtr[i]), &(_EAbuff[i*3]));
@@ -104,9 +105,9 @@ void BatchLogger::saveData()
   const void *ptr;
   
   if (!_inited) {
-    if(!noInitSent) {
+    if(!_noInitSent) {
     	fprintf(stdout, "logger not initialized.\n");
-    	noInitSent = true;
+    	_noInitSent = true;
     }
     return;
   }
@@ -143,10 +144,11 @@ void BatchLogger::saveData()
 
 void BatchLogger::writeToMRDPLOT(const char *prefix)
 {
-  mtx.lock();
   if (!_inited || _nPoints == 0)
     return;
-  _recorded = true;
+
+  // mtx.lock();
+  _saving = true;
   MRDPLOT_DATA *d;
 
   d = malloc_mrdplot_data( 0, 0 );
@@ -156,7 +158,8 @@ void BatchLogger::writeToMRDPLOT(const char *prefix)
   d->total_n_numbers = d->n_channels*d->n_points;
   d->frequency = _frequency;
   d->data = _data;
-  mtx.unlock();
+  // mtx.unlock();
+  _saving = false;
 
   fprintf(stdout, "%s SAVING DATA ..... \n", d->filename);
 
