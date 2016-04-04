@@ -239,9 +239,6 @@ write_mrdplot_file( std::string file_name, int total_n_numbers, int n_channels, 
 			float *data, std::vector<std::string> names,std::vector<std::string> units)
 {
 
-	std::cout << "n_points " << n_points << " n_channels " << n_channels << " frequency " << frequency << std::endl;
-
-
 	FILE *stream;
 	int i;
 
