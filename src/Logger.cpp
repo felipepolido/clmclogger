@@ -142,6 +142,39 @@ void BatchLogger::saveData()
 	clamp(_nPoints, 0, LOGGER_MAX_N_POINTS);
 } 
 
+void BatchLogger::writeToMRDPLOT2(std::string prefix)
+{
+  if (!_inited || _nPoints == 0)
+    return;
+
+  _saving = true;
+
+  std::string file_name = generate_file_name(prefix);
+
+  std::cout << file_name << " SAVING DATA ....." << std::endl;
+
+  std::vector<std::string> names;
+  std::vector<std::string> units;
+  float *data = _data;
+
+  names.resize(_nChannels);
+  units.resize(_nChannels);
+
+  for (int i = 0; i < _nChannels; i++) {
+    names[i] = _datapoints[i].names;
+    units[i] = _datapoints[i].units;
+  }
+
+  write_mrdplot_file( file_name, _nChannels*_nPoints,
+       _nChannels, _nPoints, _frequency,
+      data, names, units);
+
+  std::cout << file_name << " SAVED DATA." << std::endl;
+  _saving = false;
+
+
+}
+
 void BatchLogger::writeToMRDPLOT(const char *prefix)
 {
   if (!_inited || _nPoints == 0)
@@ -186,7 +219,6 @@ void BatchLogger::writeToMRDPLOT(const char *prefix)
   fprintf(stdout, "%s SAVED DATA\n", d->filename);
   free(d);
 }
-
 
 
 ///////////////////////////////////////////////////

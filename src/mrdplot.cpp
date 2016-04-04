@@ -234,6 +234,64 @@ write_mrdplot_file( MRDPLOT_DATA *d )
 	fclose( stream );
 }
 
+	void
+write_mrdplot_file( std::string file_name, int total_n_numbers, int n_channels, int n_points, float frequency,
+			float *data, std::vector<std::string> names,std::vector<std::string> units)
+{
+
+	std::cout << "n_points " << n_points << " n_channels " << n_channels << " frequency " << frequency << std::endl;
+
+
+	FILE *stream;
+	int i;
+
+	// printf( "Writing %s\n", d->filename );
+
+	/* Windows needs binary flag. No effect on Unix */
+	stream = fopen( file_name.c_str(), "wb" );
+	if ( stream == NULL )
+	{
+		fprintf( stderr, "Couldn't open %s file for write.\n", file_name.c_str() );
+		exit( -1 );
+	}
+
+	/*
+		 printf( "%d %d %d %f\n",
+		 d->total_n_numbers, d->n_channels, d->n_points, d->frequency );
+		 */
+
+	fprintf( stream, "%d %d %d %f\n",
+			total_n_numbers, n_channels, n_points, frequency );
+
+	for( i = 0; i < n_channels; i++ )
+	{
+		fprintf( stream, "%s %s\n", names[i].c_str(), units[i].c_str() );
+		//std::cout << "i " << i << " name " << names[i] << " units " << units[i] << std::endl;
+	}
+	// Linux version
+	fprintf( stream, "\n\n" );
+	// Windows version needs this?
+	// fprintf( stream, "\r\r" );
+
+
+	for( i = 0; i < n_points; i++ )
+	{
+		/* SGI version
+			 fwrite( &(data[i*N_CHANNELS]),
+			 N_CHANNELS*sizeof( float ), 1, stream );
+			 */
+		/* Linux version */
+		fwrite_reversed( (char *) (&(data[i*n_channels])),
+				n_channels*sizeof( float ), 1, stream );
+		/*
+			 fwrite( (char *) (&(d->data[i*d->n_channels])),
+			 d->n_channels*sizeof( float ), 1, stream );
+			 */
+	}
+
+	fclose( stream );
+}
+
 /*****************************************************************************/
 
 char generated_file_name[10000];
@@ -315,6 +373,33 @@ generate_file_name(const char *prefix)
 
 	return strdup(generated_file_name);
 }
+
+std::string generate_file_name(std::string prefix)
+{
+	std::stringstream file_name_ss;
+	char tmp_string_time[1000];
+	char tmp_string_user[1000];
+	time_t now = time(0);
+	struct tm tstruct;
+
+
+	tstruct = *localtime(&now);
+	strftime(tmp_string_time, sizeof(tmp_string_time), "%m_%d_%H_%M_%S", &tstruct);
+
+	int i = getlogin_r(tmp_string_user, sizeof(tmp_string_user));
+	// getlogin_r seems to be failing in some cases
+	if (i != 0)
+	{
+		tmp_string_user[0] = 0;
+		tmp_string_user[1] = 0;
+	}
+
+	file_name_ss << "/logs/mrdplot/" << prefix << "_"<< 
+				tmp_string_user << "_" << tmp_string_time << ".mrd";
+
+	return file_name_ss.str();
+}
+
 
 /*****************************************************************************/
 

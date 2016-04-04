@@ -26,7 +26,7 @@
 #include <typeinfo>
 #include <boost/thread.hpp>
 #include <boost/thread/mutex.hpp>
-
+#include <vector>
 
 #define LOGGER_MAX_CHANNELS 2000 
 #define LOGGER_MAX_CHARS		100
@@ -136,7 +136,8 @@ class BatchLogger : public Logger {
     ~BatchLogger() {;}
     void init(double timestep);
     void saveData();
-    void writeToMRDPLOT(const char *prefix);  
+    void writeToMRDPLOT2(std::string prefix);  
+    void writeToMRDPLOT(const char *prefix); 
 	//boost::mutex mtx;
 
 };
