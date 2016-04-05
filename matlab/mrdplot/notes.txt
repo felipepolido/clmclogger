@@ -20,3 +20,16 @@ for ( i = 0; i < d->n_points; i++ )
     {
       d->data[i*d->n_channels + j];
     }
+
+    
+to use mrdplot_convert in matlab
+
+clear all
+test_name = 'ctrl_fpolido_04_04_13_30_54.mrd'
+filename=strcat(test_name)
+% load data file
+[D,vars,unit, freq] = mrdplot_convert(test_name);
+for i=1:length(vars);
+   str = [vars{i},'=D(:,',num2str(i),');'];
+   eval(str);
+end    
