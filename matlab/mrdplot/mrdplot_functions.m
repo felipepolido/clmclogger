@@ -281,7 +281,8 @@ end;
 
 % read in the file name
 if isempty(fname),
-	[fname, pathname] = uigetfile('*','Select Data File');
+	% [fname, pathname] = uigetfile('*','Select Data File');
+	[fname, pathname] = uigetfile('/logs/mrdplot/*.*','Select Data File');
 	if (fname == 0),
 		return;
 	end;
