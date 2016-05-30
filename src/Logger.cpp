@@ -145,7 +145,10 @@ void BatchLogger::saveData()
 void BatchLogger::writeToMRDPLOT2(std::string prefix)
 {
   if (!_inited || _nPoints == 0)
+  {
+    std::cout << "writeToMRDPLOT2 not init or no data!" << std::endl;
     return;
+  }
 
   _saving = true;
 
