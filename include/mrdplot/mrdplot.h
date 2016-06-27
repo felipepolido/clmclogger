@@ -15,12 +15,12 @@ public:
   bool setChannelNameAndUnit(const std::string &n, const std::string &u, size_t idx);
   
   std::vector<float> _data;
+  float _freq;
 
 protected:
   std::string _name;
   size_t _n_points;
   size_t _n_channels;
-  float _freq;
   std::vector<std::string> _channelNames;
   std::vector<std::string> _channelUnits;
 };

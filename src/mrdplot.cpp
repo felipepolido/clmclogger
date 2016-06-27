@@ -60,9 +60,9 @@ bool MRDPlot::readFromFile(const std::string &name)
   try {
     in.open(name);
     // read header
-    in >> _n_points;
-    in >> _n_channels;
     in >> tot;
+    in >> _n_channels;
+    in >> _n_points;
     in >> _freq;
 
     alloc(_n_channels, _n_points);
@@ -122,7 +122,7 @@ bool MRDPlot::writeToFile(const std::string &name)
   try {
     out.open(name.c_str(), std::ofstream::out);
     // write header
-    out << _n_points << " " << _n_channels << " " << _n_channels*_n_points << " " << _freq << std::endl;
+    out << _n_points*_n_channels << " " << _n_channels << " " << _n_points << " " << _freq << std::endl;
 
     // write names and units
     for (size_t i = 0; i < _n_channels; i++) {
