@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 
 
-set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++0x -g ${CMAKE_CXX_FLAGS}")
 
 
 catkin_package(
@@ -36,5 +36,7 @@ include_directories(
 add_library(logger src/Logger.cpp)
 target_link_libraries(logger ${catkin_LIBRARIES}
                              mrdplot )
-set_target_properties(logger PROPERTIES COMPILE_FLAGS "-std=c++0x -o3")     
+set_target_properties(logger PROPERTIES COMPILE_FLAGS "-std=c++0x -g -o3")     
                           
+add_executable(testMRD test/test.cpp src/MRDLogger.cpp)
+target_link_libraries(testMRD mrdplot)

@@ -4,7 +4,32 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <iostream>
+#include <memory>
+
+class MRDPlot {
+public:
+  void alloc(size_t n_ch, size_t n_pt);
+  bool readFromFile(const std::string &name);
+  bool writeToFile(const std::string &name);
+  int findChannel(const std::string &name) const;
+  bool setChannelNameAndUnit(const std::string &n, const std::string &u, size_t idx);
+  
+  std::vector<float> _data;
+
+protected:
+  std::string _name;
+  size_t _n_points;
+  size_t _n_channels;
+  float _freq;
+  std::vector<std::string> _channelNames;
+  std::vector<std::string> _channelUnits;
+};
+
+
+
+
+
+
 
 typedef struct mrdplot_data
 {
