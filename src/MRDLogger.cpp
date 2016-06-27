@@ -60,7 +60,6 @@ bool MRDLogger::readFromFile(const std::string &name)
     in >> n_channels;
     in >> tot;
     in >> _freq;
-    _name = name;
 
     std::vector<std::string> names(n_channels);
     std::vector<std::string> units(n_channels);
@@ -110,13 +109,11 @@ bool MRDLogger::readFromFile(const std::string &name)
   return true;
 }
 
-bool MRDLogger::writeToFile(const std::string &name)
+bool MRDLogger::writeToFile(const std::string &name) const
 {
   if (size() == 0)
     return true;
 
-  _name = name;
-  
   std::ofstream out;
   out.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   

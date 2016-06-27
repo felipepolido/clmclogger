@@ -39,7 +39,6 @@ protected:
     }
   };
 
-  std::string _name;
   float _freq;
   
   size_t _ptEnd;
@@ -54,9 +53,10 @@ public:
   MRDLogger();
   virtual ~MRDLogger();
   void saveData();
+  void popData();
   
   bool readFromFile(const std::string &name);
-  bool writeToFile(const std::string &name);
+  bool writeToFile(const std::string &name) const;
   
   bool addChannel(const std::string &name, const std::string &unit, const bool *ptr) 
     { return _addChannel(name, unit, ptr, LOGGER_DATA_TYPE_BOOL); } 
@@ -77,8 +77,8 @@ public:
   bool addChannel(const std::string &name, const std::string &unit, const unsigned long *ptr)
     { return _addChannel(name, unit, ptr, LOGGER_DATA_TYPE_ULONG); } 
 
-  bool hasMoreData() const { return size() != 0; }
-  void popData();
+  inline bool hasMoreData() const { return size() != 0; }
+  inline void setFrequency(float f) { _freq = f; }
 
   size_t size() const;
   size_t maxSize() const;
