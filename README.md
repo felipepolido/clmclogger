@@ -88,4 +88,4 @@ Thank you personally to:
 [Stefan Schaal](http://www-clmc.usc.edu/~sschaal/) ,
 [Siyuan Feng](https://github.com/siyuanfeng) ,
 [Matt DeDonato](https://github.com/mdedonato) , 
-[Chris Atkseon](https://github.com/cga-cmu) , 
+[Chris Atkseon](https://github.com/cga-cmu)
