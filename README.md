@@ -85,7 +85,7 @@ Thank you for anyone who has contributed to this library along the way. If you w
 
 Thank you personally to:
 
-[Stefan Schaal](http://www-clmc.usc.edu/~sschaal/)
-[Siyuan Feng](https://github.com/siyuanfeng)
-[Matt DeDonato](https://github.com/mdedonato)
-[Chris Atkseon](https://github.com/cga-cmu)
+[Stefan Schaal](http://www-clmc.usc.edu/~sschaal/) ,
+[Siyuan Feng](https://github.com/siyuanfeng) ,
+[Matt DeDonato](https://github.com/mdedonato) , 
+[Chris Atkseon](https://github.com/cga-cmu) , 
