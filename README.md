@@ -32,25 +32,6 @@ sudo mkdir -p /logs/mrdplot
 sudo chmod -R 777 /logs/mrdplot
 ```
 
-
-### Adding dependency
-
-On your ROS package, you must include the mrdplot project as a dependency. 
-
-Make sure the CMakeLists.txt find the mrdplot package:
-```bash
-find_package(catkin REQUIRED
-  mrdplot
-  )
-```
-
-And add the dependency to your package.xml:
-
-```bash
-  <build_depend>mrdplot</build_depend>
-  <run_depend>mrdplot</run_depend>
-```
-
 ### Example:
 
 To launch the ros example, start the publisher:
@@ -76,6 +57,27 @@ For example:
 /logs/mrdplot/ctrl_fpolido_06_29_11_48_32.mrd SAVED DATA.
 ```
 
+
+### Adding dependency
+
+On your own ROS package, you must include the mrdplot project as a dependency. 
+
+Make sure the CMakeLists.txt find the mrdplot package:
+```bash
+find_package(catkin REQUIRED
+  mrdplot
+  )
+```
+
+And add the dependency to your package.xml:
+
+```bash
+  <build_depend>mrdplot</build_depend>
+  <run_depend>mrdplot</run_depend>
+```
+
+
+
 ## Thank you 
 Thank you Stefan Schaal for developing mrdplot along with the SL simulator.
 
@@ -83,6 +85,7 @@ Thank you for anyone who has contributed to this library along the way. If you w
 
 Thank you personally to:
 
+[Stefan Schaal](http://www-clmc.usc.edu/~sschaal/)
 [Siyuan Feng](https://github.com/siyuanfeng)
 [Matt DeDonato](https://github.com/mdedonato)
 [Chris Atkseon](https://github.com/cga-cmu)
