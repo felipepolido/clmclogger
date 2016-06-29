@@ -51,50 +51,19 @@ And add the dependency to your package.xml:
   <run_depend>mrdplot</run_depend>
 ```
 
-### Use example:
+### Example:
 
-Include the logger:
-
+To launch the ros example, start the publisher:
 ```bash
-//Logger
-#include <mrdplot/Logger.h>	
+rosrun mrdplot ros_example_pub
 ```
 
-Create and initialize a BatchLogger
-
+And in another terminal start the logger:
 ```bash
-BatchLogger logger;
-
-double period = 0.01; //Period between logger calls(fixed)
-logger.init(period);
+rosrun mrdplot ros_example_logger
 ```
 
-Add different variables to be logged( these variable pointers must remain valid thourhout the logging period)
-```bash
-double double_to_be_logged 0.0;
-
-logger.add_datapoint("name_of_double_to_logged","s",&double_to_be_logged);
-```
-
-
-```bash
-
-ros::Rate loop_rate(100);
-int count = 0;
-while (ros::ok())
-{
-	double_to_be_logged += 0.01;//Change value	
-	logger.saveData(); //Save Data 
-	ros::spinOnce();
-	loop_rate.sleep();
-	count ++;
-	if(count >= 10000) break;
-}
-logger.writeToMRDPLOT2("ctrl");
-
-```
-
-When you run the code, if the file was logged properly you will get the following message:
+The logger will log 300 data points, if the file was logged properly you will get the following message:
 
 ```bash
 /logs/mrdplot/ctrl_<user>_<date and time>.mrd SAVING DATA .....
