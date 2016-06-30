@@ -11,9 +11,146 @@
 #include <unistd.h>
 #include <mrdplot/mrdplot.h>
 
+#include <iostream>
+#include <fstream>
+
 /*****************************************************************************/
 /*****************************************************************************/
 /*****************************************************************************/
+
+bool MRDPlot::setChannelNameAndUnit(const std::string &n, const std::string &u, size_t idx)
+{
+  if (n.find(" ") != std::string::npos || n.find("\n") != std::string::npos ||
+      u.find(" ") != std::string::npos || u.find("\n") != std::string::npos)
+    return false;
+  if (idx >= _n_channels)
+    return false;
+
+  _channelNames[idx] = n;
+  _channelUnits[idx] = u;
+  return true;
+}
+
+void MRDPlot::alloc(size_t n_ch, size_t n_pt)
+{
+  if (n_ch == 0 || n_pt == 0)
+    return;
+  
+  _name = "noname";
+  _n_points = n_pt;
+  _n_channels = n_ch;
+  _freq = 0;
+  
+  if (_n_channels == 0)
+    return;
+
+  _channelNames.resize(_n_channels);
+  _channelUnits.resize(_n_channels);
+
+  _data.resize(_n_channels*_n_points);
+}
+
+bool MRDPlot::readFromFile(const std::string &name)
+{
+  std::ifstream in;
+  in.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+  
+  size_t tot;
+
+  try {
+    in.open(name);
+    // read header
+    in >> tot;
+    in >> _n_channels;
+    in >> _n_points;
+    in >> _freq;
+
+    alloc(_n_channels, _n_points);
+    _name = name;
+    
+    // read the channel names and units
+    std::string tmp;
+    for (size_t i = 0; i < _n_channels; i++) {
+      in >> tmp;
+      _channelNames[i] = tmp;
+      in >> tmp;
+      _channelUnits[i] = tmp;
+    }
+
+    // get 3 \n
+    in.get();
+    in.get();
+    in.get();
+
+    // read data
+    char *ptr = (char *)&_data[0];
+    for (size_t i = 0; i < _n_points*_n_channels; i++) {
+      ptr[3] = in.get();
+      ptr[2] = in.get();
+      ptr[1] = in.get();
+      ptr[0] = in.get();
+
+      ptr +=4;
+    }
+    
+    in.get();
+  }
+  catch (std::ifstream::failure e) {
+    std::cerr << "error when parsing data\n";
+    return false;
+  }
+
+  return true;
+}
+
+int MRDPlot::findChannel(const std::string &name) const
+{
+  for (size_t i = 0; i < _channelNames.size(); i++)
+    if (_channelNames[i].compare(name) == 0)
+      return i;
+
+  return -1;
+}
+
+bool MRDPlot::writeToFile(const std::string &name)
+{
+  _name = name;
+  
+  std::ofstream out;
+  out.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+  
+  try {
+    out.open(name.c_str(), std::ofstream::out);
+    // write header
+    out << _n_points*_n_channels << " " << _n_channels << " " << _n_points << " " << _freq << std::endl;
+
+    // write names and units
+    for (size_t i = 0; i < _n_channels; i++) {
+      out << _channelNames[i] << " " << _channelUnits[i] << std::endl;
+    }
+
+    // write 2 empty line
+    out << std::endl << std::endl;
+
+    // write data
+    for (size_t i = 0; i < _n_points*_n_channels; i++) {
+      char *ptr = (char *)(&_data[i]);
+      out.put(ptr[3]);
+      out.put(ptr[2]);
+      out.put(ptr[1]);
+      out.put(ptr[0]);
+    }
+
+    out.close();
+  }
+  catch (std::ofstream::failure e) {
+    std::cerr << "error when writing data\n";
+  }
+
+}
+
+
+
 
 	MRDPLOT_DATA *
 malloc_mrdplot_data( int n_channels, int n_points )
