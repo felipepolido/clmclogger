@@ -165,11 +165,6 @@ bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath
   return true;
 }
 
-bool MRDLogger::writeToFile(const std::string &name) const
-{
-  return writeToFile(name, "");
-}
-
 size_t MRDLogger::size() const
 {
   if (_ptEnd >= _ptStart)
