@@ -36,11 +36,11 @@ target_link_libraries(logger ${catkin_LIBRARIES}
                              mrdplot )
 set_target_properties(logger PROPERTIES COMPILE_FLAGS "-std=c++0x -o3")     
         
-add_executable(example_logger src/ExampleLogger.cpp)
+add_executable(example_logger example/ExampleLogger.cpp)
 target_link_libraries(example_logger  logger ${catkin_LIBRARIES})
 
-add_executable(ros_example_logger src/RosExampleLogger.cpp)
+add_executable(ros_example_logger example/RosExampleLogger.cpp)
 target_link_libraries(ros_example_logger  logger ${catkin_LIBRARIES})
 
-add_executable(ros_example_pub src/RosExamplePublisher.cpp)
+add_executable(ros_example_pub example/RosExamplePublisher.cpp)
 target_link_libraries(ros_example_pub ${catkin_LIBRARIES})

@@ -9,6 +9,14 @@ The goal of this repository is to 1) try integrating some of these different var
 
 The current version of C++ wrapper compiles easily as a ROS Catkin project.
 
+#### mrdplot tool
+
+![MRDPLOT](/docs//mrdplot.png?raw=true "mrdplot")
+
+#### clmcplot tool
+
+![CLMCPLOT](/docs//clmcplot.png?raw=true "clmcplot")
+
 ## How-to use it in ROS environment
 
 
@@ -33,18 +41,12 @@ sudo chmod -R 777 /logs/mrdplot
 ```
 
 ### Example:
-
-To launch the ros example, start the publisher:
+To launch the example:
 ```bash
-rosrun mrdplot ros_example_pub
+rosrun mrdplot example_logger
 ```
 
-And in another terminal start the logger:
-```bash
-rosrun mrdplot ros_example_logger
-```
-
-The logger will log 300 data points, if the file was logged properly you will get the following message:
+If the file was logged properly you will get the following message:
 
 ```bash
 /logs/mrdplot/ctrl_<user>_<date and time>.mrd SAVING DATA .....
@@ -57,12 +59,37 @@ For example:
 /logs/mrdplot/ctrl_fpolido_06_29_11_48_32.mrd SAVED DATA.
 ```
 
+### ROS Example:
 
-### Adding dependency
+To launch the ros example, start the publisher:
+```bash
+rosrun mrdplot ros_example_pub
+```
 
-On your own ROS package, you must include the mrdplot project as a dependency. 
+And in another terminal start the logger:
+```bash
+rosrun mrdplot ros_example_logger
+```
 
-Make sure the CMakeLists.txt find the mrdplot package:
+### Data Visualization:
+
+First, open MATLAB and include /mrdplot/matlab to MATLAB's path:
+- traverse to the mrdplot folder
+- right click on the mrdplot/matlab folder
+- go to "Add to Path"  
+- click on "Select Folders and Subfolders" 
+
+Then on the command window type "mrdplot" or "clmcplot" to open either tool.
+At this point open a log by cliking the "Open" button on the GUI.
+
+After the log has opened, to add signals to each plot click 
+on the signal and then click on the desired plot.
+
+### Dependencies
+
+To include mrdplot to your project, 
+first make sure the CMakeLists.txt find the mrdplot package:
+
 ```bash
 find_package(catkin REQUIRED
   mrdplot
