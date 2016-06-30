@@ -9,6 +9,14 @@ The goal of this repository is to 1) try integrating some of these different var
 
 The current version of C++ wrapper compiles easily as a ROS Catkin project.
 
+#### mrdplot tool
+
+![MRDPLOT](/docs//mrdplot.png?raw=true "mrdplot")
+
+#### clmcplot tool
+
+![CLMCPLOT](/docs//clmcplot.png?raw=true "clmcplot")
+
 ## How-to use it in ROS environment
 
 
@@ -76,11 +84,6 @@ At this point open a log by cliking the "Open" button on the GUI.
 
 After the log has opened, to add signals to each plot click 
 on the signal and then click on the desired plot.
-
-
-![MRDPLOT](/docs//mrdplot.png?raw=true "mrdplot")
-
-![CLMCPLOT](/docs//clmcplot.png?raw=true "clmcplot")
 
 ### Dependencies
 
