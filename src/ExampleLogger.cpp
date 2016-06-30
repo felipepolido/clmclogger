@@ -64,10 +64,10 @@ int main(int argc, char **argv)
 		sine_waves[4] = 1.0*cos(2*M_PI*1*local_time);
 		
 		//Sawtooth wave generation:
-		sawtooth_wave = abs((count % 100) - 1);
+		sawtooth_wave = abs((count % 100) - 1)*0.01;
 
 		//Triangle wave generation:
-		int tri_half_period = 100;
+		int tri_half_period = 240;
 		triangle_wave = (1.0/tri_half_period) * 
 			(tri_half_period - abs(count % (2*tri_half_period) - tri_half_period));
 		
