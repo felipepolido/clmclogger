@@ -77,9 +77,10 @@ At this point open a log by cliking the "Open" button on the GUI.
 After the log has opened, to add signals to each plot click 
 on the signal and then click on the desired plot.
 
-![CLMCPLOT](/docs//clmcplot.png?raw=true)
 
+![MRDPLOT](/docs//mrdplot.png?raw=true "mrdplot")
 
+![CLMCPLOT](/docs//clmcplot.png?raw=true "clmcplot")
 
 ### Dependencies
 
