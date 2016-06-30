@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 	float triangle_wave = 0.0;
 
 
-	static const int log_time = 5;//Sec
+	static const int log_time = 1;//Sec
 	static const double period = 0.001;//1/Sec
 	static const int max_count = (int)(log_time/period);
 	std::cout << "Logging time is " << log_time << " sec" << std::endl;

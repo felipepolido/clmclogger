@@ -3,7 +3,7 @@
 #include <iostream>
 
 // the real max size is MAX_CHANNEL_LENGTH - 1
-#define MAX_CHANNEL_LENGTH      100
+#define MAX_CHANNEL_LENGTH      1000000
 
 size_t MRDLogger::maxSize() const { return MAX_CHANNEL_LENGTH - 1; }
 
