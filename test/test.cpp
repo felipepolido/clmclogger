@@ -22,7 +22,7 @@ void aa()
   mrd.writeToFile("1asf.mrd");
 
   MRDPlot M;
-  M.readFromFile("asf.mrd");
+  M.readFromFile("1asf.mrd");
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 3; j++) {
       printf("%g\n", M._data[i*3+j]);
