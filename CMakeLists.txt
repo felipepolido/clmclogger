@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
-set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++0x -g ${CMAKE_CXX_FLAGS}")
 
 catkin_package(
   INCLUDE_DIRS include
@@ -34,8 +34,11 @@ include_directories(
 add_library(logger src/Logger.cpp)
 target_link_libraries(logger ${catkin_LIBRARIES}
                              mrdplot )
-set_target_properties(logger PROPERTIES COMPILE_FLAGS "-std=c++0x -o3")     
+set_target_properties(logger PROPERTIES COMPILE_FLAGS "-std=c++0x -g -o3")     
         
+add_executable(testMRD test/test.cpp src/MRDLogger.cpp)
+target_link_libraries(testMRD mrdplot)
+
 add_executable(example_logger example/ExampleLogger.cpp)
 target_link_libraries(example_logger  logger ${catkin_LIBRARIES})
 
@@ -44,3 +47,7 @@ target_link_libraries(ros_example_logger  logger ${catkin_LIBRARIES})
 
 add_executable(ros_example_pub example/RosExamplePublisher.cpp)
 target_link_libraries(ros_example_pub ${catkin_LIBRARIES})
+
+                          
+
+
