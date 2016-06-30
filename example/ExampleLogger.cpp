@@ -1,21 +1,23 @@
+#include <iostream>
 #include <math.h> 
 #include <vector>
 #include <chrono>
 #include <thread>
 
 //Logger
-#include <mrdplot/Logger.h>
+#include <mrdplot/MRDLogger.h>
 
 
 //Simple logger example 
 int main(int argc, char **argv)
 {
 
-	BatchLogger logger;
+	MRDLogger logger;
 	double double_data = 0.0;
 	double local_time = 0.0;
 	std::vector<double> sine_waves(5, 0.0); //Create vector of 5 signals
 	int count = 0;
+	long long_count = 10000;
 	float sawtooth_wave = 0.0;
 	float triangle_wave = 0.0;
 
@@ -27,21 +29,18 @@ int main(int argc, char **argv)
 	std::cout << "Period is       " << period << " 1/sec" <<std::endl;
 	std::cout << "Sample count of " << max_count << std::endl;
 
-	if (!logger.hasInited()) {
-		logger.init(period);
-	}
-
 	// Add variables to be logged:
-	logger.add_datapoint("double_data","s",&double_data);
-	logger.add_datapoint("local_time","s",&local_time);
-	logger.add_datapoint("count","s",&count);
-	logger.add_datapoint("sine_wave_0","s",&sine_waves[0]);
-	logger.add_datapoint("sine_wave_1","s",&sine_waves[1]);
-	logger.add_datapoint("sine_wave_2","s",&sine_waves[2]);
-	logger.add_datapoint("sine_wave_3","s",&sine_waves[3]);
-	logger.add_datapoint("sine_wave_4","s",&sine_waves[4]);
-	logger.add_datapoint("sawtooth_wave","s",&sawtooth_wave);
-	logger.add_datapoint("triangle_wave","s",&triangle_wave);
+	logger.addChannel("double_data","s",&double_data);
+	logger.addChannel("local_time","s",&local_time);
+	logger.addChannel("count","s",&count);
+	logger.addChannel("long_count","s",&long_count);
+	logger.addChannel("sine_wave_0","s",&sine_waves[0]);
+	logger.addChannel("sine_wave_1","s",&sine_waves[1]);
+	logger.addChannel("sine_wave_2","s",&sine_waves[2]);
+	logger.addChannel("sine_wave_3","s",&sine_waves[3]);
+	logger.addChannel("sine_wave_4","s",&sine_waves[4]);
+	logger.addChannel("sawtooth_wave","s",&sawtooth_wave);
+	logger.addChannel("triangle_wave","s",&triangle_wave);
 	
 	auto t_start = std::chrono::high_resolution_clock::now();
 
@@ -49,6 +48,9 @@ int main(int argc, char **argv)
 
 		//Forever increment value:
 		double_data += 0.01;
+
+		//Forever decreasing:
+		long_count -= 1;
 
 		//Get local time
 		auto t_latest = std::chrono::high_resolution_clock::now();
@@ -84,7 +86,7 @@ int main(int argc, char **argv)
 	}
 
 	//Save log to file (with pre-fix "ctrl") in folder /logs/mrdplot
-	logger.writeToMRDPLOT2("ctrl");
+	logger.writeToFile("ctrl");
 	return 0;
 }
 
