@@ -101,10 +101,10 @@ bool MRDLogger::readFromFile(const std::string &name, const std::string &filePat
 
       _ptEndLast = _ptEnd;
       _ptStartLast = _ptStart;
-      if(_ptEnd >= _maxChannelLength -1){
+      if (_ptEnd >= _maxChannelLength -1) {
         _ptEnd = 0;
         _wrapping = true;
-      }else {
+      } else {
         _ptEnd++;
       }
       if (_ptEnd == _ptStart)
@@ -152,7 +152,7 @@ bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath
     // write data
     size_t i = _ptStart;
     size_t len = 0;
-    while(true) {
+    while (true) {
       for (auto it = _outputOrder.begin(); it != _outputOrder.end(); it++) {
         len = (*it)->data.size();
         char *ptr = (char *)(&((*it)->data.at(i)));
@@ -161,13 +161,13 @@ bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath
         out.put(ptr[1]);
         out.put(ptr[0]);        
       }
-      if(i == _ptEndLast){
+      if (i == _ptEndLast) {
         //If reached end of log, stop
         break;
       } else if (i == len - 1){
         //If reached end of buffer, wrap to start
         i = 0;
-      }else {
+      } else {
         i++;
       }
     }
@@ -265,7 +265,7 @@ bool MRDLogger::hasMoreData() {
   //std::cout << "wrapping " << _wrapping << std::endl;
   if (_ptStartLast == _ptEnd) {
     return false;
-  }else{
+  } else {
     return true;
   }
 }
