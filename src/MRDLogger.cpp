@@ -22,6 +22,7 @@ void MRDLogger::_reset()
 {
   _ptStart = 0;
   _ptEnd = 0;
+  _freq = 1;
 }
 
 bool MRDLogger::_addChannel(const std::string &name, const std::string &unit, const void *ptr, LoggerDataType type)
