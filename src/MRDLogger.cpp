@@ -20,6 +20,7 @@ MRDLogger::~MRDLogger()
 void MRDLogger::_reset()
 {
   _ptStart = 0;
+  _ptStartLast = 0;
   _ptEnd = 0;
   _ptEndLast = 0;
   _freq = 1;
@@ -98,13 +99,22 @@ bool MRDLogger::readFromFile(const std::string &name, const std::string &filePat
         }
       }
 
-      _ptEnd = (_ptEnd+1) % _maxChannelLength;
+      _ptEndLast = _ptEnd;
+      _ptStartLast = _ptStart;
+      if(_ptEnd >= _maxChannelLength -1){
+        _ptEnd = 0;
+        _wrapping = true;
+      }else {
+        _ptEnd++;
+      }
       if (_ptEnd == _ptStart)
         _ptStart = (_ptStart+1) % _maxChannelLength;
 
       //std::cout << "read: " << tmp_data << std::endl;
       //std::cout << "start idx: " << _ptStart << " end idx: " << _ptEnd << std::endl;
     }
+    _ptEnd = _ptEndLast;
+    _ptStart = _ptStartLast;
   }
   catch (std::ifstream::failure e) {
     std::cerr << "error when parsing data\n";
@@ -117,7 +127,7 @@ bool MRDLogger::readFromFile(const std::string &name, const std::string &filePat
 bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath) const
 {
   if (size() == 0) {
-    std::cout << "Returned" << std::endl;
+    //std::cout << "Returned" << std::endl;
     return true;
   }
 
@@ -185,7 +195,7 @@ void MRDLogger::saveData()
 
   if ((_ptEndLast >= _maxChannelLength -1 ) && _ringBuffer == false) {
     //Reached buffer limit, and not wrapping around
-    std::cout << "Maximum Channel Lenght reached. Not saving..." << std::endl;
+    //std::cout << "Maximum Channel Lenght reached. Not saving..." << std::endl;
     return;
   }
 
@@ -240,11 +250,23 @@ void MRDLogger::saveData()
   _ptEndLast = _ptEnd;
   if ((_ptEnd >= _maxChannelLength - 1) && _ringBuffer == true) {
     //Reached buffer limit, wrap around
-    std::cout << "Wrap around" << std::endl;
+    //std::cout << "Wrap around" << std::endl;
     _ptEnd = 0;
     _wrapping = true;
   } else {
     _ptEnd++;
+  }
+}
+
+bool MRDLogger::hasMoreData() {
+  //std::cout << "start    " << _ptStart << std::endl;
+  //std::cout << "start l  " << _ptStartLast << std::endl;
+  //std::cout << "end      " << _ptEnd << std::endl;
+  //std::cout << "wrapping " << _wrapping << std::endl;
+  if (_ptStartLast == _ptEnd) {
+    return false;
+  }else{
+    return true;
   }
 }
 
@@ -288,5 +310,14 @@ void MRDLogger::popData()
     }
   }
 
-  _ptStart = (_ptStart+1) % _maxChannelLength;
+  _ptStartLast = _ptStart;
+  if (_wrapping) {
+    if (_ptStart >= _maxChannelLength -1) {
+      _ptStart = 0;
+    } else {
+      _ptStart++;
+    }
+  } else {
+    _ptStart++;
+  }
 }

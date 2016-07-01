@@ -43,6 +43,7 @@ protected:
   size_t _ptEnd;
   size_t _ptEndLast;
   size_t _ptStart;
+  size_t _ptStartLast;
 
   unsigned int _maxChannelLength;
   bool _ringBuffer;
@@ -58,6 +59,7 @@ public:
   virtual ~MRDLogger();
   void saveData();
   void popData();
+  bool hasMoreData();
   
   bool readFromFile(const std::string &name, const std::string &filePath = "");
   bool writeToFile(const std::string &name, const std::string &filePath = "") const;
@@ -81,7 +83,6 @@ public:
   bool addChannel(const std::string &name, const std::string &unit, const unsigned long *ptr)
     { return _addChannel(name, unit, ptr, LOGGER_DATA_TYPE_ULONG); } 
 
-  inline bool hasMoreData() const { return size() != 0; }
   inline void setFrequency(float f) { _freq = f; }
 
   size_t size() const;
