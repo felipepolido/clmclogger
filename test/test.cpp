@@ -71,20 +71,20 @@ void newstuff()
   a++; b++; c++; d++;
   printf("a %d, b %g, c %ld, d %d\n", a,b,c,d);
   log.saveData();
-  
+
   log.writeToFile("asdf");
 
   // float e = 0;
   // log.addChannel("e", "-", &e);
 
-  // std::cout << "Read file" << std::endl;
-  // log.readFromFile("asdf.mrd");
+  std::cout << "Read file" << std::endl;
+  log.readFromFile("asdf");
 
-  // a = b = c = d = 0;
-  // while(log.hasMoreData()) {
-  //   log.popData();
-  //   printf("a %d, b %g, c %ld, d %d\n", a,b,c,d);
-  // } 
+  a = b = c = d = 0;
+  while(log.hasMoreData()) {
+    log.popData();
+    printf("a %d, b %g, c %ld, d %d\n", a,b,c,d);
+  } 
   std::cout << "Finished example" << std::endl;
 }
 
