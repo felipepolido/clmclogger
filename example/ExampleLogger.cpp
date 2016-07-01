@@ -12,7 +12,7 @@
 int main(int argc, char **argv)
 {
 
-	MRDLogger logger;
+	MRDLogger logger(300,true);
 	double double_data = 0.0;
 	double local_time = 0.0;
 	std::vector<double> sine_waves(5, 0.0); //Create vector of 5 signals

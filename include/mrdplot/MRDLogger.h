@@ -40,9 +40,13 @@ protected:
   };
 
   float _freq;
-  
   size_t _ptEnd;
+  size_t _ptEndLast;
   size_t _ptStart;
+
+  unsigned int _maxChannelLength;
+  bool _ringBuffer;
+  bool _wrapping;
 
   std::map<const std::string, DataChannel> _channels;
   std::list<const DataChannel *> _outputOrder;
@@ -50,7 +54,7 @@ protected:
   void _reset();
 
 public:
-  MRDLogger();
+  MRDLogger(const unsigned int maxChannelLength = 1000, const bool ringBuffer = false);
   virtual ~MRDLogger();
   void saveData();
   void popData();
