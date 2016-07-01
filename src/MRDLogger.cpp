@@ -1,9 +1,10 @@
 #include "mrdplot/MRDLogger.h"
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 // the real max size is MAX_CHANNEL_LENGTH - 1
-#define MAX_CHANNEL_LENGTH      100
+#define MAX_CHANNEL_LENGTH      1000
 
 size_t MRDLogger::maxSize() const { return MAX_CHANNEL_LENGTH - 1; }
 
@@ -21,6 +22,7 @@ void MRDLogger::_reset()
 {
   _ptStart = 0;
   _ptEnd = 0;
+  _freq = 1;
 }
 
 bool MRDLogger::_addChannel(const std::string &name, const std::string &unit, const void *ptr, LoggerDataType type)
@@ -109,7 +111,7 @@ bool MRDLogger::readFromFile(const std::string &name)
   return true;
 }
 
-bool MRDLogger::writeToFile(const std::string &name) const
+bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath) const
 {
   if (size() == 0)
     return true;
@@ -118,7 +120,9 @@ bool MRDLogger::writeToFile(const std::string &name) const
   out.exceptions(std::ifstream::failbit | std::ifstream::badbit);
   
   try {
-    out.open(name.c_str(), std::ofstream::out);
+    std::stringstream ss;
+    ss << filePath << name << ".mrd";
+    out.open(ss.str().c_str(), std::ofstream::out);
     // write header
     out << this->size()*_channels.size() << " " << _channels.size() << " " << this->size() << " " << _freq << std::endl;
 

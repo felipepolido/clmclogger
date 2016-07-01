@@ -17,7 +17,7 @@ The current version of C++ wrapper compiles easily as a ROS Catkin project.
 
 ![CLMCPLOT](/docs//clmcplot.png?raw=true "clmcplot")
 
-## How-to use it in ROS environment
+## How-to use (ROS environment)
 
 
 ### Installation
@@ -41,7 +41,7 @@ sudo chmod -R 777 /logs/mrdplot
 ```
 
 ### Example:
-To launch the example:
+To launch the [example logger](https://github.com/felipepolido/mrdplot/blob/master/example/ExampleLogger.cpp):
 ```bash
 rosrun mrdplot example_logger
 ```
@@ -61,12 +61,14 @@ For example:
 
 ### ROS Example:
 
-To launch the ros example, start the publisher:
+To launch the ros example, start the 
+[ros publisher](https://github.com/felipepolido/mrdplot/blob/master/example/RosExamplePublisher.cpp):
 ```bash
 rosrun mrdplot ros_example_pub
 ```
 
-And in another terminal start the logger:
+And in another terminal start the 
+[ros logger](https://github.com/felipepolido/mrdplot/blob/master/example/RosExampleLogger.cpp):
 ```bash
 rosrun mrdplot ros_example_logger
 ```

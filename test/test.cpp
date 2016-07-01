@@ -22,7 +22,7 @@ void aa()
   mrd.writeToFile("1asf.mrd");
 
   MRDPlot M;
-  M.readFromFile("asf.mrd");
+  M.readFromFile("1asf.mrd");
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 3; j++) {
       printf("%g\n", M._data[i*3+j]);
@@ -44,19 +44,19 @@ void newstuff()
   log.addChannel("c", "-", &c);
   log.addChannel("d", "-", &d);
 
-  printf("a %d, b %g, c %d, d %d\n", a,b,c,d);
+  printf("a %d, b %g, c %ld, d %d\n", a,b,c,d);
   log.saveData();
   
   a++; b++; c++; d++;
-  printf("a %d, b %g, c %d, d %d\n", a,b,c,d);
+  printf("a %d, b %g, c %ld, d %d\n", a,b,c,d);
   log.saveData();
   
   a++; b++; c++; d++;
-  printf("a %d, b %g, c %d, d %d\n", a,b,c,d);
+  printf("a %d, b %g, c %ld, d %d\n", a,b,c,d);
   log.saveData();
   
   a++; b++; c++; d++;
-  printf("a %d, b %g, c %d, d %d\n", a,b,c,d);
+  printf("a %d, b %g, c %ld, d %d\n", a,b,c,d);
   log.saveData();
 
   //log.writeToFile("asdf.mrd");
@@ -69,7 +69,7 @@ void newstuff()
   a = b = c = d = 0;
   while(log.hasMoreData()) {
     log.popData();
-    printf("a %d, b %g, c %d, d %d\n", a,b,c,d);
+    printf("a %d, b %g, c %ld, d %d\n", a,b,c,d);
   } 
 }
 
