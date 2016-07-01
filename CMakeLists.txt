@@ -39,7 +39,7 @@ target_link_libraries(logger ${catkin_LIBRARIES}
                              MRDLogger )
 set_target_properties(logger PROPERTIES COMPILE_FLAGS "-std=c++0x -g -o3")     
         
-add_executable(testMRD test/test.cpp src/MRDLogger.cpp)
+add_executable(testMRD test/test.cpp)
 target_link_libraries(testMRD MRDLogger)
 
 add_executable(example_logger example/ExampleLogger.cpp)
