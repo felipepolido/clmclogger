@@ -55,7 +55,7 @@ public:
   void saveData();
   void popData();
   
-  bool readFromFile(const std::string &name);
+  bool readFromFile(const std::string &name, const std::string &filePath = "");
   bool writeToFile(const std::string &name, const std::string &filePath = "") const;
   
   bool addChannel(const std::string &name, const std::string &unit, const bool *ptr) 

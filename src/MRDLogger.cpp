@@ -45,7 +45,7 @@ bool MRDLogger::_addChannel(const std::string &name, const std::string &unit, co
   return true;
 }
 
-bool MRDLogger::readFromFile(const std::string &name)
+bool MRDLogger::readFromFile(const std::string &name, const std::string &filePath)
 {
   std::ifstream in;
   in.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -56,7 +56,9 @@ bool MRDLogger::readFromFile(const std::string &name)
 
   try {
     _reset();
-    in.open(name);
+    std::stringstream ss;
+    ss << filePath << name << ".mrd";
+    in.open(ss.str().c_str());
     // read header
     in >> tot;
     in >> n_channels;
