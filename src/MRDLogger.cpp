@@ -270,7 +270,8 @@ void MRDLogger::saveData()
   }
 }
 
-bool MRDLogger::hasMoreData() {
+bool MRDLogger::hasMoreData() 
+{
   //std::cout << "start    " << _ptStart << std::endl;
   //std::cout << "start l  " << _ptStartLast << std::endl;
   //std::cout << "end      " << _ptEnd << std::endl;
