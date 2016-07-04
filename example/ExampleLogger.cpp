@@ -87,6 +87,7 @@ int main(int argc, char **argv)
 
 	//Save log to file (with pre-fix "ctrl") in folder /logs/mrdplot
 	logger.writeToFile("ctrl");
+	//logger.writeToFile("ctrl",true);
 	//logger.writeToFile("ctrl","/logs/mrdplot/");
 	return 0;
 }

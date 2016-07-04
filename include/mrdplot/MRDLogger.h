@@ -62,7 +62,11 @@ public:
   bool hasMoreData();
   
   bool readFromFile(const std::string &name, const std::string &filePath = "");
-  bool writeToFile(const std::string &name, const std::string &filePath = "") const;
+  bool writeToFile(const std::string &name, const std::string &filePath = "", const bool useTimeStamp = false) const;
+
+  inline bool writeToFile(const std::string &name, const bool useTimeStamp = false) {
+    writeToFile(name,std::string(""),useTimeStamp);
+  }
   
   bool addChannel(const std::string &name, const std::string &unit, const bool *ptr) 
     { return _addChannel(name, unit, ptr, LOGGER_DATA_TYPE_BOOL); } 

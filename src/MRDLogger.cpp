@@ -59,6 +59,7 @@ bool MRDLogger::readFromFile(const std::string &name, const std::string &filePat
   try {
     _reset();
     std::stringstream ss;
+
     ss << filePath << name << ".mrd";
     in.open(ss.str().c_str());
     // read header
@@ -124,10 +125,9 @@ bool MRDLogger::readFromFile(const std::string &name, const std::string &filePat
   return true;
 }
 
-bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath) const
+bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath, const bool useTimeStamp) const
 {
   if (size() == 0) {
-    //std::cout << "Returned" << std::endl;
     return true;
   }
 
@@ -136,7 +136,19 @@ bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath
   
   try {
     std::stringstream ss;
-    ss << filePath << name << ".mrd";
+
+    //If requested, write log name with date and time stamp:
+    std::string timeString = "";
+    if (useTimeStamp) {
+      char timeBuffer[1000];
+      time_t now = time(0);
+      struct tm tstruct;
+      tstruct = *localtime(&now);
+      strftime(timeBuffer, sizeof(timeBuffer), "_%y_%m_%d_%H_%M_%S", &tstruct);
+      timeString = timeBuffer;
+    }
+
+    ss << filePath << name << timeString << ".mrd";
     out.open(ss.str().c_str(), std::ofstream::out);
     // write header
     out << this->size()*_channels.size() << " " << _channels.size() << " " << this->size() << " " << _freq << std::endl;
