@@ -7,7 +7,8 @@ size_t MRDLogger::maxSize() const { return _maxChannelLength - 1; }
 
 MRDLogger::MRDLogger(const unsigned int maxChannelLength, const bool ringBuffer):
     _maxChannelLength(maxChannelLength),
-    _ringBuffer(ringBuffer)
+    _ringBuffer(ringBuffer),
+    _verbosity(V_NONE)
 {
   _reset();
 }
@@ -59,7 +60,10 @@ bool MRDLogger::readFromFile(const std::string &name, const std::string &filePat
   try {
     _reset();
     std::stringstream ss;
+
     ss << filePath << name << ".mrd";
+    if (_verbosity <= V_INFO) std::cout << "Opening file " << ss.str() << std::endl; 
+
     in.open(ss.str().c_str());
     // read header
     in >> tot;
@@ -94,7 +98,7 @@ bool MRDLogger::readFromFile(const std::string &name, const std::string &filePat
 
         auto it = _channels.find(names[i]);
         if (it != _channels.end()) {
-          //std::cout << "read: " << it->first << " " << tmp_data << std::endl;
+          if (_verbosity <= V_DEBUG) std::cout << "read: " << it->first << " " << tmp_data << std::endl;
           it->second.data[_ptEnd] = tmp_data;
         }
       }
@@ -110,8 +114,11 @@ bool MRDLogger::readFromFile(const std::string &name, const std::string &filePat
       if (_ptEnd == _ptStart)
         _ptStart = (_ptStart+1) % _maxChannelLength;
 
-      //std::cout << "read: " << tmp_data << std::endl;
-      //std::cout << "start idx: " << _ptStart << " end idx: " << _ptEnd << std::endl;
+      if (_verbosity <= V_DEBUG)
+      {
+        std::cout << "read: " << tmp_data << std::endl;
+        std::cout << "start idx: " << _ptStart << " end idx: " << _ptEnd << std::endl;
+      }
     }
     _ptEnd = _ptEndLast;
     _ptStart = _ptStartLast;
@@ -124,10 +131,9 @@ bool MRDLogger::readFromFile(const std::string &name, const std::string &filePat
   return true;
 }
 
-bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath) const
+bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath, const bool useTimeStamp) const
 {
   if (size() == 0) {
-    //std::cout << "Returned" << std::endl;
     return true;
   }
 
@@ -136,7 +142,21 @@ bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath
   
   try {
     std::stringstream ss;
-    ss << filePath << name << ".mrd";
+
+    //If requested, write log name with date and time stamp:
+    std::string timeString = "";
+    if (useTimeStamp) {
+      char timeBuffer[1000];
+      time_t now = time(0);
+      struct tm tstruct;
+      tstruct = *localtime(&now);
+      strftime(timeBuffer, sizeof(timeBuffer), "_%y_%m_%d_%H_%M_%S", &tstruct);
+      timeString = timeBuffer;
+    }
+
+    ss << filePath << name << timeString << ".mrd";
+
+    if (_verbosity <= V_INFO) std::cout << "Saving to file  " << ss.str() << std::endl; 
     out.open(ss.str().c_str(), std::ofstream::out);
     // write header
     out << this->size()*_channels.size() << " " << _channels.size() << " " << this->size() << " " << _freq << std::endl;
@@ -173,6 +193,8 @@ bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath
     }
 
     out.close();
+    if (_verbosity <= V_INFO) std::cout << "Finished saving " << ss.str() << std::endl; 
+
   }
   catch (std::ofstream::failure e) {
     std::cerr << "error when writing data\n";
@@ -195,7 +217,8 @@ void MRDLogger::saveData()
 
   if ((_ptEndLast >= _maxChannelLength -1 ) && _ringBuffer == false) {
     //Reached buffer limit, and not wrapping around
-    //std::cout << "Maximum Channel Lenght reached. Not saving..." << std::endl;
+    if (_verbosity <= V_WARNING)
+      std::cout << "Maximum Channel Lenght reached. Not saving..." << std::endl;
     return;
   }
 
@@ -258,11 +281,8 @@ void MRDLogger::saveData()
   }
 }
 
-bool MRDLogger::hasMoreData() {
-  //std::cout << "start    " << _ptStart << std::endl;
-  //std::cout << "start l  " << _ptStartLast << std::endl;
-  //std::cout << "end      " << _ptEnd << std::endl;
-  //std::cout << "wrapping " << _wrapping << std::endl;
+bool MRDLogger::hasMoreData() 
+{
   if (_ptStartLast == _ptEnd) {
     return false;
   } else {
@@ -321,3 +341,16 @@ void MRDLogger::popData()
     _ptStart++;
   }
 }
+
+void MRDLogger::setVerbosityLevel(VerbosityType verb)
+{
+  _verbosity = verb;
+  if (_verbosity <= V_DEBUG) {
+    std::cout << "Verbotisy level set to : " << _verbosity << std::endl; 
+    std::cout << "MRDLogger state: " << std::endl; 
+    std::cout << "Maximum channel length is " << _maxChannelLength << std::endl; 
+    if (_ringBuffer) std::cout << "Ring buffer flag is true" << std::endl;
+  }
+}
+
+ 
