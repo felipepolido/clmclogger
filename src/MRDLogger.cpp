@@ -3,12 +3,11 @@
 #include <iostream>
 #include <sstream>
 
-// the real max size is MAX_CHANNEL_LENGTH - 1
-#define MAX_CHANNEL_LENGTH      1000
+size_t MRDLogger::maxSize() const { return _maxChannelLength - 1; }
 
-size_t MRDLogger::maxSize() const { return MAX_CHANNEL_LENGTH - 1; }
-
-MRDLogger::MRDLogger()
+MRDLogger::MRDLogger(const unsigned int maxChannelLength, const bool ringBuffer):
+    _maxChannelLength(maxChannelLength),
+    _ringBuffer(ringBuffer)
 {
   _reset();
 }
@@ -21,8 +20,11 @@ MRDLogger::~MRDLogger()
 void MRDLogger::_reset()
 {
   _ptStart = 0;
+  _ptStartLast = 0;
   _ptEnd = 0;
+  _ptEndLast = 0;
   _freq = 1;
+  _wrapping = false;
 }
 
 bool MRDLogger::_addChannel(const std::string &name, const std::string &unit, const void *ptr, LoggerDataType type)
@@ -37,7 +39,7 @@ bool MRDLogger::_addChannel(const std::string &name, const std::string &unit, co
   _channels[name].type = type;
   _channels[name].channel = _channels.size()-1;
   _channels[name].ptr = ptr;
-  _channels[name].data.resize(MAX_CHANNEL_LENGTH, 0);
+  _channels[name].data.resize(_maxChannelLength, 0);
 
   _outputOrder.push_back(&_channels[name]);
   //std::cout << _channels.size() << " " << _outputOrder.size() << std::endl;
@@ -45,7 +47,7 @@ bool MRDLogger::_addChannel(const std::string &name, const std::string &unit, co
   return true;
 }
 
-bool MRDLogger::readFromFile(const std::string &name)
+bool MRDLogger::readFromFile(const std::string &name, const std::string &filePath)
 {
   std::ifstream in;
   in.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -56,7 +58,9 @@ bool MRDLogger::readFromFile(const std::string &name)
 
   try {
     _reset();
-    in.open(name);
+    std::stringstream ss;
+    ss << filePath << name << ".mrd";
+    in.open(ss.str().c_str());
     // read header
     in >> tot;
     in >> n_channels;
@@ -95,13 +99,22 @@ bool MRDLogger::readFromFile(const std::string &name)
         }
       }
 
-      _ptEnd = (_ptEnd+1) % MAX_CHANNEL_LENGTH;
+      _ptEndLast = _ptEnd;
+      _ptStartLast = _ptStart;
+      if (_ptEnd >= _maxChannelLength -1) {
+        _ptEnd = 0;
+        _wrapping = true;
+      } else {
+        _ptEnd++;
+      }
       if (_ptEnd == _ptStart)
-        _ptStart = (_ptStart+1) % MAX_CHANNEL_LENGTH;
+        _ptStart = (_ptStart+1) % _maxChannelLength;
 
       //std::cout << "read: " << tmp_data << std::endl;
       //std::cout << "start idx: " << _ptStart << " end idx: " << _ptEnd << std::endl;
     }
+    _ptEnd = _ptEndLast;
+    _ptStart = _ptStartLast;
   }
   catch (std::ifstream::failure e) {
     std::cerr << "error when parsing data\n";
@@ -113,8 +126,10 @@ bool MRDLogger::readFromFile(const std::string &name)
 
 bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath) const
 {
-  if (size() == 0)
+  if (size() == 0) {
+    //std::cout << "Returned" << std::endl;
     return true;
+  }
 
   std::ofstream out;
   out.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -137,24 +152,24 @@ bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath
     // write data
     size_t i = _ptStart;
     size_t len = 0;
-    while(true) {
+    while (true) {
       for (auto it = _outputOrder.begin(); it != _outputOrder.end(); it++) {
         len = (*it)->data.size();
         char *ptr = (char *)(&((*it)->data.at(i)));
         out.put(ptr[3]);
         out.put(ptr[2]);
         out.put(ptr[1]);
-        out.put(ptr[0]);  
-        
-        //std::cout << "write: " << (*it)->name << " " << (*it)->data.at(i) << std::endl;
+        out.put(ptr[0]);        
       }
-      //std::cout << "write idx: " << i << " end: " << _ptEnd << std::endl;
-
-      i++;
-      if (i == len)
-        i = 0;
-      if (i == _ptEnd)
+      if (i == _ptEndLast) {
+        //If reached end of log, stop
         break;
+      } else if (i == len - 1){
+        //If reached end of buffer, wrap to start
+        i = 0;
+      } else {
+        i++;
+      }
     }
 
     out.close();
@@ -168,14 +183,33 @@ bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath
 
 size_t MRDLogger::size() const
 {
-  if (_ptEnd >= _ptStart)
-    return _ptEnd - _ptStart;
-  else
-    return _ptEnd + MAX_CHANNEL_LENGTH - _ptStart;
+  if (_wrapping) {
+    return _maxChannelLength;
+  } else {
+    return _ptEnd;
+  }
 }
 
 void MRDLogger::saveData()
 {
+
+  if ((_ptEndLast >= _maxChannelLength -1 ) && _ringBuffer == false) {
+    //Reached buffer limit, and not wrapping around
+    //std::cout << "Maximum Channel Lenght reached. Not saving..." << std::endl;
+    return;
+  }
+
+  //Handle start pointer:
+  if (_wrapping) {
+    if (_ptStart >= _maxChannelLength - 1) {
+      //_ptStart reached buffer limit, wrap around
+      _ptStart = 0;
+    } else {
+      _ptStart++;
+    }
+  }
+
+
   for (auto it = _channels.begin(); it != _channels.end(); it++) {
     switch (it->second.type) {
       case LOGGER_DATA_TYPE_BOOL:
@@ -210,16 +244,30 @@ void MRDLogger::saveData()
         continue;
     }
   }
-  
-  _ptEnd++;
-  if (_ptEnd >= MAX_CHANNEL_LENGTH)
+
+  //Handle end pointer
+  //_ptEndLast is always one behind _ptEnd
+  _ptEndLast = _ptEnd;
+  if ((_ptEnd >= _maxChannelLength - 1) && _ringBuffer == true) {
+    //Reached buffer limit, wrap around
+    //std::cout << "Wrap around" << std::endl;
     _ptEnd = 0;
-  if (_ptEnd == _ptStart)
-    _ptStart++;
-  if (_ptStart >= MAX_CHANNEL_LENGTH)
-    _ptStart = 0;
-  
-  //std::cout << "start/end " << _ptStart << " " << _ptEnd << std::endl;
+    _wrapping = true;
+  } else {
+    _ptEnd++;
+  }
+}
+
+bool MRDLogger::hasMoreData() {
+  //std::cout << "start    " << _ptStart << std::endl;
+  //std::cout << "start l  " << _ptStartLast << std::endl;
+  //std::cout << "end      " << _ptEnd << std::endl;
+  //std::cout << "wrapping " << _wrapping << std::endl;
+  if (_ptStartLast == _ptEnd) {
+    return false;
+  } else {
+    return true;
+  }
 }
 
 void MRDLogger::popData()
@@ -262,5 +310,14 @@ void MRDLogger::popData()
     }
   }
 
-  _ptStart = (_ptStart+1) % MAX_CHANNEL_LENGTH;
+  _ptStartLast = _ptStart;
+  if (_wrapping) {
+    if (_ptStart >= _maxChannelLength -1) {
+      _ptStart = 0;
+    } else {
+      _ptStart++;
+    }
+  } else {
+    _ptStart++;
+  }
 }

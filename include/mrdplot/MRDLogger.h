@@ -40,9 +40,14 @@ protected:
   };
 
   float _freq;
-  
   size_t _ptEnd;
+  size_t _ptEndLast;
   size_t _ptStart;
+  size_t _ptStartLast;
+
+  unsigned int _maxChannelLength;
+  bool _ringBuffer;
+  bool _wrapping;
 
   std::map<const std::string, DataChannel> _channels;
   std::list<const DataChannel *> _outputOrder;
@@ -50,12 +55,13 @@ protected:
   void _reset();
 
 public:
-  MRDLogger();
+  MRDLogger(const unsigned int maxChannelLength = 1000, const bool ringBuffer = false);
   virtual ~MRDLogger();
   void saveData();
   void popData();
+  bool hasMoreData();
   
-  bool readFromFile(const std::string &name);
+  bool readFromFile(const std::string &name, const std::string &filePath = "");
   bool writeToFile(const std::string &name, const std::string &filePath = "") const;
   
   bool addChannel(const std::string &name, const std::string &unit, const bool *ptr) 
@@ -77,7 +83,6 @@ public:
   bool addChannel(const std::string &name, const std::string &unit, const unsigned long *ptr)
     { return _addChannel(name, unit, ptr, LOGGER_DATA_TYPE_ULONG); } 
 
-  inline bool hasMoreData() const { return size() != 0; }
   inline void setFrequency(float f) { _freq = f; }
 
   size_t size() const;

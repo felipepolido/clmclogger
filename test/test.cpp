@@ -1,6 +1,7 @@
 #include "mrdplot/mrdplot.h"
 #include "mrdplot/MRDLogger.h"
 #include <math.h>
+#include <iostream>
 
 void aa()
 {
@@ -33,9 +34,9 @@ void aa()
 
 void newstuff()
 {
-  MRDLogger log;
+  MRDLogger log(3,true);
   int a = 2;
-  double b = 3.3;
+  double b = 2.3;
   long c = -5;
   bool d = true; 
 
@@ -59,21 +60,35 @@ void newstuff()
   printf("a %d, b %g, c %ld, d %d\n", a,b,c,d);
   log.saveData();
 
-  //log.writeToFile("asdf.mrd");
+  a++; b++; c++; d++;
+  printf("a %d, b %g, c %ld, d %d\n", a,b,c,d);
+  log.saveData();
 
-  float e = 0;
-  log.addChannel("e", "-", &e);
+  a++; b++; c++; d++;
+  printf("a %d, b %g, c %ld, d %d\n", a,b,c,d);
+  log.saveData();
 
-  log.readFromFile("asdf.mrd");
+  a++; b++; c++; d++;
+  printf("a %d, b %g, c %ld, d %d\n", a,b,c,d);
+  log.saveData();
+
+  log.writeToFile("asdf");
+
+  // float e = 0;
+  // log.addChannel("e", "-", &e);
+
+  std::cout << "Read file" << std::endl;
+  log.readFromFile("asdf");
 
   a = b = c = d = 0;
   while(log.hasMoreData()) {
     log.popData();
     printf("a %d, b %g, c %ld, d %d\n", a,b,c,d);
   } 
+  std::cout << "Finished example" << std::endl;
 }
 
 int main()
 {
-  aa();
+  newstuff();
 }
