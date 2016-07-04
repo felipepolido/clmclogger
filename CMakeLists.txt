@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(mrdplot)
+project(clmcplot)
 
 set(MSG_DEPS
 
