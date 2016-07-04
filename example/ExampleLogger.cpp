@@ -11,7 +11,17 @@
 int main(int argc, char **argv)
 {
 
-  MRDLogger logger(300,true);
+  static const int log_time = 1;//Sec
+  static const double period = 0.001;//1/Sec
+  static const int max_count = (int)(log_time/period);
+  std::cout << "Logging time is " << log_time << " sec" << std::endl;
+  std::cout << "Period is       " << period << std::endl;
+  std::cout << "Sample count of " << max_count << std::endl;
+
+
+  MRDLogger logger(10000,true);
+  logger.setFrequency(1/period);
+  logger.setVerbosityLevel(MRDLogger::V_INFO);
   double double_data = 0.0;
   double local_time = 0.0;
   std::vector<double> sine_waves(5, 0.0); //Create vector of 5 signals
@@ -19,13 +29,6 @@ int main(int argc, char **argv)
   long long_count = 10000;
   float sawtooth_wave = 0.0;
   float triangle_wave = 0.0;
-
-  static const int log_time = 1;//Sec
-  static const double period = 0.001;//1/Sec
-  static const int max_count = (int)(log_time/period);
-  std::cout << "Logging time is " << log_time << " sec" << std::endl;
-  std::cout << "Period is       " << period << " 1/sec" <<std::endl;
-  std::cout << "Sample count of " << max_count << std::endl;
 
   // Add variables to be logged:
   logger.addChannel("double_data","s",&double_data);

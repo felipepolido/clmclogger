@@ -39,6 +39,7 @@ target_link_libraries(logger ${catkin_LIBRARIES}
                              mrdplot MRDLogger )
 set_target_properties(logger PROPERTIES COMPILE_FLAGS "-std=c++0x -g -o3")     
         
+## Tests and Examples:
 add_executable(testMRD test/test.cpp)
 target_link_libraries(testMRD mrdplot MRDLogger)
 

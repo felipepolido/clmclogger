@@ -7,6 +7,15 @@
 class MRDLogger
 {
 
+public:
+  enum VerbosityType {
+    V_ALL = 0, //Print out all the messages
+    V_DEBUG,   //Second highest level, for debugging
+    V_INFO,    //General information (file names, etc)
+    V_WARNING, //Warnings ONLY
+    V_NONE     //No print statements
+  };
+
 protected:
   enum LoggerDataType {
     LOOGER_DATA_TYPE_UNDEF = 0,
@@ -49,6 +58,8 @@ protected:
   bool _ringBuffer;
   bool _wrapping;
 
+  VerbosityType _verbosity;
+
   std::map<const std::string, DataChannel> _channels;
   std::list<const DataChannel *> _outputOrder;
   
@@ -60,6 +71,7 @@ public:
   void saveData();
   void popData();
   bool hasMoreData();
+  void setVerbosityLevel(const VerbosityType verb);
   
   bool readFromFile(const std::string &name, const std::string &filePath = "");
   bool writeToFile(const std::string &name, const std::string &filePath = "", const bool useTimeStamp = false) const;
