@@ -1,29 +1,43 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(clmcplot)
 
-set(MSG_DEPS
-
-)
-
-find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  roslib
-  std_msgs
-)
+# Checking if the project is compiling with Catkin or CMake
+set(CATKIN_CALL "${CATKIN_DEVEL_PREFIX}")
+if(CATKIN_CALL)
+  message("Compiling clmcplot library as a Catkin project")
+  find_package(catkin REQUIRED COMPONENTS
+    roscpp
+    roslib
+    std_msgs
+  )
+else()
+  message("Compiling clmcplot library as a CMake project")
+  # Setting the output directories for libraries and executables
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_SOURCE_DIR}/lib)
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_SOURCE_DIR}/lib)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_SOURCE_DIR}/bin)
+endif()
 
 set(CMAKE_CXX_FLAGS "-std=c++0x -g ${CMAKE_CXX_FLAGS}")
 
-catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES mrdplot logger
-  CATKIN_DEPENDS roscpp roslib
-  DEPENDS Eigen3 
-)
+if(CATKIN_CALL)
+  include_directories(
+    include
+    ${catkin_INCLUDE_DIRS}
+  )
 
-include_directories(
-	include
-	${catkin_INCLUDE_DIRS}
-)
+  catkin_package(
+    INCLUDE_DIRS include
+    LIBRARIES mrdplot logger
+    CATKIN_DEPENDS roscpp roslib
+    DEPENDS Eigen3 
+  )
+else()
+  include_directories(
+    include
+  )
+endif()
+
 
 ## Declare a cpp library
 add_library(mrdplot src/mrdplot.cpp)
@@ -35,8 +49,7 @@ set_target_properties(MRDLogger PROPERTIES COMPILE_FLAGS "-std=c++0x -g -o3")
 
 ## Declare a cpp library
 add_library(logger src/Logger.cpp)
-target_link_libraries(logger ${catkin_LIBRARIES}
-                             mrdplot MRDLogger )
+target_link_libraries(logger mrdplot MRDLogger )
 set_target_properties(logger PROPERTIES COMPILE_FLAGS "-std=c++0x -g -o3")     
         
 ## Tests and Examples:
@@ -44,14 +57,14 @@ add_executable(testMRD test/test.cpp)
 target_link_libraries(testMRD mrdplot MRDLogger)
 
 add_executable(example_logger example/ExampleLogger.cpp)
-target_link_libraries(example_logger  MRDLogger ${catkin_LIBRARIES})
+target_link_libraries(example_logger  MRDLogger)
 
-add_executable(ros_example_logger example/RosExampleLogger.cpp)
-target_link_libraries(ros_example_logger  logger ${catkin_LIBRARIES})
+if(CATKIN_CALL)
+  add_executable(ros_example_logger example/RosExampleLogger.cpp)
+  target_link_libraries(ros_example_logger  logger ${catkin_LIBRARIES})
 
-add_executable(ros_example_pub example/RosExamplePublisher.cpp)
-target_link_libraries(ros_example_pub ${catkin_LIBRARIES})
+  add_executable(ros_example_pub example/RosExamplePublisher.cpp)
+  target_link_libraries(ros_example_pub ${catkin_LIBRARIES})
+else()                       
 
-                          
-
-
+endif()
