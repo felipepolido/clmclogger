@@ -24,7 +24,9 @@ The current version of C++ wrapper compiles easily as a ROS Catkin project.
 
 ### Installation
 
-Clone this package on your catkin workspace source folder:
+#### CATKIN (ROS) Workspace
+
+Clone the software on your catkin workspace source folder:
 ```bash
 cd ~/catkin_ws/src
 git clone git@github.com:felipepolido/mrdplot.git
@@ -35,8 +37,22 @@ cd ~/catkin_ws/
 catkin_make
 ```
 
-As of this writing the log files will be saved in the current folder by default.
+#### CMake
 
+Clone the software on your computer:
+```bash
+cd ~/
+git clone git@github.com:felipepolido/mrdplot.git
+```
+
+Compile:
+
+```bash
+mkdir build
+cd build
+cmake ..
+make -j
+```
 
 ### Example:
 To launch the [example logger](https://github.com/felipepolido/mrdplot/blob/master/example/ExampleLogger.cpp):
