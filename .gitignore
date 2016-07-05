@@ -1,2 +1,6 @@
 *~
 .clmcplot_current_point
+bin
+build
+lib
+*.mrd
