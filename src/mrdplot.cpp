@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
-#include <mrdplot/mrdplot.h>
+#include <clmclogger/mrdplot.h>
 
 #include <iostream>
 #include <fstream>

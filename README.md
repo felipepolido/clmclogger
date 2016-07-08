@@ -1,11 +1,11 @@
-# clmcplot
-clmcplot tool for variable logging (C++) and data manipulation/visualization (MATLAB)
+# clmclogger
+clmclogger tool for variable logging (C++) and data manipulation/visualization (MATLAB)
 
 ## Description 
 
-clmcplot is a logging tool first developed by Stefan Schaal along with the SL robot simulator. Since then many researchers have modified the code with improvements, new features, etc... But due to the lack of a central repository, each different group developed their own variations of the code.
+clmclogger is a logging tool first developed by Stefan Schaal along with the SL robot simulator. Since then many researchers have modified the code with improvements, new features, etc... But due to the lack of a central repository, each different group developed their own variations of the code.
 
-The goal of this repository is to 1) design/maintain the general C++ logger to be used in many different projects, 2) try integrating some of these different variations of clmcplot into a single common place, and 3) further develop existing functionality.
+The goal of this repository is to 1) design/maintain the general C++ logger to be used in many different projects, 2) try integrating some of these different variations of clmclogger into a single common place, and 3) further develop existing functionality.
 
 The current version of C++ wrapper compiles easily as a ROS Catkin project.
 
@@ -56,26 +56,26 @@ make -j
 
 ### ROS Examples:
 
-To launch the standalone [example logger](https://github.com/felipepolido/mrdplot/blob/master/example/ExampleLogger.cpp):
+To launch the standalone [example logger](https://github.com/felipepolido/clmclogger/blob/master/example/ExampleLogger.cpp):
 ```bash
-rosrun clmcplot example_logger
+rosrun clmclogger example_logger
 ```
 
 To launch the ros example, start the 
-[ros publisher](https://github.com/felipepolido/mrdplot/blob/master/example/RosExamplePublisher.cpp):
+[ros publisher](https://github.com/felipepolido/clmclogger/blob/master/example/RosExamplePublisher.cpp):
 ```bash
-rosrun clmcplot ros_example_pub
+rosrun clmclogger ros_example_pub
 ```
 
 And in another terminal start the 
-[ros logger](https://github.com/felipepolido/mrdplot/blob/master/example/RosExampleLogger.cpp):
+[ros logger](https://github.com/felipepolido/clmclogger/blob/master/example/RosExampleLogger.cpp):
 ```bash
-rosrun clmcplot ros_example_logger
+rosrun clmclogger ros_example_logger
 ```
 
 ### CMake Example:
 
-To launch the standalone [example logger](https://github.com/felipepolido/mrdplot/blob/master/example/ExampleLogger.cpp) in CMake:
+To launch the standalone [example logger](https://github.com/felipepolido/clmclogger/blob/master/example/ExampleLogger.cpp) in CMake:
 ```bash
 ./bin/example_logger
 ```
@@ -83,9 +83,9 @@ To launch the standalone [example logger](https://github.com/felipepolido/mrdplo
 
 ## Data Visualization:
 
-First, open MATLAB and include /clmcplot/matlab to MATLAB's path:
-- traverse to the clmcplot folder
-- right click on the clmcplot/matlab folder
+First, open MATLAB and include /clmclogger/matlab to MATLAB's path:
+- traverse to the clmclogger folder
+- right click on the clmclogger/matlab folder
 - go to "Add to Path"  
 - click on "Select Folders and Subfolders" 
 
@@ -97,20 +97,20 @@ on the signal and then click on the desired plot.
 
 ## Dependencies
 
-To include clmcplot to your ROS project, 
-first make sure the CMakeLists.txt find the clmcplot package:
+To include clmclogger to your ROS project, 
+first make sure the CMakeLists.txt find the clmclogger package:
 
 ```bash
 find_package(catkin REQUIRED
-  clmcplot
+  clmclogger
   )
 ```
 
 And add the dependency to your package.xml:
 
 ```bash
-  <build_depend>clmcplot</build_depend>
-  <run_depend>clmcplot</run_depend>
+  <build_depend>clmclogger</build_depend>
+  <run_depend>clmclogger</run_depend>
 ```
 
 

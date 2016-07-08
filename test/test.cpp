@@ -1,5 +1,5 @@
-#include "mrdplot/mrdplot.h"
-#include "mrdplot/MRDLogger.h"
+#include "clmclogger/mrdplot.h"
+#include "clmclogger/CLMCLogger.h"
 #include <math.h>
 #include <iostream>
 
@@ -34,7 +34,7 @@ void aa()
 
 void newstuff()
 {
-  MRDLogger log(3,true);
+  CLMCLogger log(3,true);
   int a = 2;
   double b = 2.3;
   long c = -5;

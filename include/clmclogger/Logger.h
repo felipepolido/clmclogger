@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <mrdplot/mrdplot.h>
+#include <clmclogger/mrdplot.h>
 #include <eigen3/Eigen/Geometry>
 #include <typeinfo>
 #include <boost/thread.hpp>

@@ -4,7 +4,7 @@
 #include <list>
 #include <map>
 
-class MRDLogger
+class CLMCLogger
 {
 
 public:
@@ -66,8 +66,8 @@ protected:
   void _reset();
 
 public:
-  MRDLogger(const unsigned int maxChannelLength = 1000, const bool ringBuffer = false);
-  virtual ~MRDLogger();
+  CLMCLogger(const unsigned int maxChannelLength = 1000, const bool ringBuffer = false);
+  virtual ~CLMCLogger();
   void saveData();
   void popData();
   bool hasMoreData();

@@ -5,7 +5,7 @@
 #include <thread>
 
 //Logger
-#include <mrdplot/MRDLogger.h>
+#include <clmclogger/CLMCLogger.h>
 
 //Simple logger example 
 int main(int argc, char **argv)
@@ -19,9 +19,9 @@ int main(int argc, char **argv)
   std::cout << "Sample count of " << max_count << std::endl;
 
 
-  MRDLogger logger(10000,true);
+  CLMCLogger logger(10000,true);
   logger.setFrequency(1/period);
-  logger.setVerbosityLevel(MRDLogger::V_INFO);
+  logger.setVerbosityLevel(CLMCLogger::V_INFO);
   double double_data = 0.0;
   double local_time = 0.0;
   std::vector<double> sine_waves(5, 0.0); //Create vector of 5 signals
@@ -85,10 +85,8 @@ int main(int argc, char **argv)
     if (count%100 == 0) std::cout << "Count " << count << " Time " << local_time << std::endl;
   }
 
-  //Save log to file (with pre-fix "ctrl") in folder /logs/mrdplot
   logger.writeToFile("ctrl");
   //logger.writeToFile("ctrl",true);
-  //logger.writeToFile("ctrl","/logs/mrdplot/");
   return 0;
 }
 

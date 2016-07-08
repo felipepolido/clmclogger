@@ -2,7 +2,7 @@
 #include "std_msgs/Float64.h"
 
 //Logger
-#include <mrdplot/Logger.h>
+#include <clmclogger/Logger.h>
 
 //Example of logging data from a ros topic. This behavior is very similar to what a rosbag would do
 //The BatchLogger can also just as easily be used in the loop, using the same principles as below.

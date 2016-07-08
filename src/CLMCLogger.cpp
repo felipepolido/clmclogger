@@ -1,11 +1,11 @@
-#include "mrdplot/MRDLogger.h"
+#include "clmclogger/CLMCLogger.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
-size_t MRDLogger::maxSize() const { return _maxChannelLength - 1; }
+size_t CLMCLogger::maxSize() const { return _maxChannelLength - 1; }
 
-MRDLogger::MRDLogger(const unsigned int maxChannelLength, const bool ringBuffer):
+CLMCLogger::CLMCLogger(const unsigned int maxChannelLength, const bool ringBuffer):
     _maxChannelLength(maxChannelLength),
     _ringBuffer(ringBuffer),
     _verbosity(V_NONE)
@@ -13,12 +13,12 @@ MRDLogger::MRDLogger(const unsigned int maxChannelLength, const bool ringBuffer)
   _reset();
 }
 
-MRDLogger::~MRDLogger()
+CLMCLogger::~CLMCLogger()
 {
 
 }
 
-void MRDLogger::_reset()
+void CLMCLogger::_reset()
 {
   _ptStart = 0;
   _ptStartLast = 0;
@@ -28,7 +28,7 @@ void MRDLogger::_reset()
   _wrapping = false;
 }
 
-bool MRDLogger::_addChannel(const std::string &name, const std::string &unit, const void *ptr, LoggerDataType type)
+bool CLMCLogger::_addChannel(const std::string &name, const std::string &unit, const void *ptr, LoggerDataType type)
 {
   if (_channels.find(name) != _channels.end())
     return false;
@@ -48,7 +48,7 @@ bool MRDLogger::_addChannel(const std::string &name, const std::string &unit, co
   return true;
 }
 
-bool MRDLogger::readFromFile(const std::string &name, const std::string &filePath)
+bool CLMCLogger::readFromFile(const std::string &name, const std::string &filePath)
 {
   std::ifstream in;
   in.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -131,7 +131,7 @@ bool MRDLogger::readFromFile(const std::string &name, const std::string &filePat
   return true;
 }
 
-bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath, const bool useTimeStamp) const
+bool CLMCLogger::writeToFile(const std::string &name, const std::string &filePath, const bool useTimeStamp) const
 {
   if (size() == 0) {
     return true;
@@ -203,7 +203,7 @@ bool MRDLogger::writeToFile(const std::string &name, const std::string &filePath
   return true;
 }
 
-size_t MRDLogger::size() const
+size_t CLMCLogger::size() const
 {
   if (_wrapping) {
     return _maxChannelLength;
@@ -212,7 +212,7 @@ size_t MRDLogger::size() const
   }
 }
 
-void MRDLogger::saveData()
+void CLMCLogger::saveData()
 {
 
   if ((_ptEndLast >= _maxChannelLength -1 ) && _ringBuffer == false) {
@@ -281,7 +281,7 @@ void MRDLogger::saveData()
   }
 }
 
-bool MRDLogger::hasMoreData() 
+bool CLMCLogger::hasMoreData() 
 {
   if (_ptStartLast == _ptEnd) {
     return false;
@@ -290,7 +290,7 @@ bool MRDLogger::hasMoreData()
   }
 }
 
-void MRDLogger::popData()
+void CLMCLogger::popData()
 {
   if (!hasMoreData())
     return;
@@ -342,12 +342,12 @@ void MRDLogger::popData()
   }
 }
 
-void MRDLogger::setVerbosityLevel(VerbosityType verb)
+void CLMCLogger::setVerbosityLevel(VerbosityType verb)
 {
   _verbosity = verb;
   if (_verbosity <= V_DEBUG) {
     std::cout << "Verbotisy level set to : " << _verbosity << std::endl; 
-    std::cout << "MRDLogger state: " << std::endl; 
+    std::cout << "CLMCLogger state: " << std::endl; 
     std::cout << "Maximum channel length is " << _maxChannelLength << std::endl; 
     if (_ringBuffer) std::cout << "Ring buffer flag is true" << std::endl;
   }

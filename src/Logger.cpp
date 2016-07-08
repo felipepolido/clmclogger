@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string> 
-#include <mrdplot/Logger.h>
+#include <clmclogger/Logger.h>
 
 // If running on the dev boards and you want to lock memory change
 // this to 50000.  500000 results in more than 8gigs - the memory size
