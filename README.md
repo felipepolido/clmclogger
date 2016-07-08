@@ -40,7 +40,8 @@ catkin_make
 Clone the software on your computer:
 ```bash
 cd ~/
-git clone git@github.com:felipepolido/mrdplot.git
+git clone git@github.com:felipepolido/clmclogger.git
+git submodule update --init
 ```
 
 Compile:
